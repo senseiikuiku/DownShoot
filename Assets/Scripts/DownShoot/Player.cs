@@ -6,11 +6,14 @@ public class Player : MonoBehaviour
 
     public PlayerAim aim { get; private set; } // get; private set; nghĩa là thuộc tính chỉ có thể được gán giá trị trong lớp này, nhưng có thể được truy cập từ bên ngoài lớp.
     public PlayerMovement movement { get; private set; }
+
+    public PlayerWeaponController weapon { get; private set; }
     private void Awake()
     {
         controls = new PlayerControls();
         aim = GetComponent<PlayerAim>();
         movement = GetComponent<PlayerMovement>();
+        weapon = GetComponent<PlayerWeaponController>();
     }
 
     private void OnEnable()

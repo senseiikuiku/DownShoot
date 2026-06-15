@@ -10,7 +10,6 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private Transform gunPoint;
 
     [SerializeField] private Transform weaponHolder;
-    [SerializeField] private Transform aim;
 
 
     private void Start()
@@ -22,8 +21,6 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Shoot()
     {
-
-
         GameObject bullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
         bullet.GetComponent<Rigidbody>().linearVelocity = BulletDirection() * bulletSpeed;
 
@@ -32,18 +29,21 @@ public class PlayerWeaponController : MonoBehaviour
         GetComponentInChildren<Animator>().SetTrigger("Fire");
     }
 
-    private Vector3 BulletDirection()
+    public Vector3 BulletDirection()
     {
+        Transform aim = player.aim.Aim();
+
         Vector3 direction = (aim.position - gunPoint.position).normalized;
 
         // Nếu không thể ngắm chính xác, chỉ cho phép bắn theo phương ngang
         if (player.aim.CanAimPrecisely() == false && player.aim.Target() == null)
             direction.y = 0;
 
-        weaponHolder.LookAt(aim);
-        gunPoint.LookAt(aim);
+        //weaponHolder.LookAt(aim); // De cho khac
+        //gunPoint.LookAt(aim);
 
         return direction;
     }
 
+    public Transform GunPoint() => gunPoint;
 }
