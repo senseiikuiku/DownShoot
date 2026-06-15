@@ -7,7 +7,9 @@ public class PlayerAim : MonoBehaviour
 
     [Header("Aim Control")]
     [SerializeField] private Transform aim;
+
     [SerializeField] private bool isAimPrecisely;
+    [SerializeField] private bool isLockingTarget;
 
     [Header("Camera Control")]
     [SerializeField] private Transform cameraTarget;
@@ -37,12 +39,33 @@ public class PlayerAim : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
             isAimPrecisely = !isAimPrecisely;
 
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            isLockingTarget = !isLockingTarget;
+        }
+
         UpdateAimPosition();
         UpdateCameraPosition();
+    }
+    public Transform Target()
+    {
+        Transform target = null;
+
+        if (GetMouseHitInfo().transform.GetComponent<Target>() != null)
+            target = GetMouseHitInfo().transform;
+
+        return target;
     }
 
     private void UpdateAimPosition()
     {
+        Transform target = Target();
+        if (target != null && isLockingTarget)
+        {
+            aim.position = target.position;
+            return;
+        }
+
         aim.position = GetMouseHitInfo().point;
         if (!isAimPrecisely)
             aim.position = new Vector3(aim.position.x, transform.position.y + 1, aim.position.z);
@@ -60,6 +83,8 @@ public class PlayerAim : MonoBehaviour
             return true;
         return false;
     }
+
+
 
     private Vector3 DesiredCameraPosition()
     {
