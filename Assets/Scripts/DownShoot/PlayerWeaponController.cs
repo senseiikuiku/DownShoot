@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
+    private Player player;
     private const float REFERENCE_BULLET_SPEED = 20f; // Đây là tốc độ mặc định mà từ đó công thích tính mass được tạo ra
 
-    private Player player;
+    [SerializeField] private Weapon currentWeapon;
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed;
@@ -13,16 +15,52 @@ public class PlayerWeaponController : MonoBehaviour
 
     [SerializeField] private Transform weaponHolder;
 
+    [Header("Inventory")]
+    [SerializeField] private List<Weapon> weaponSlots;
+
 
     private void Start()
     {
-        player = GetComponent<Player>();
+        currentWeapon.ammo = currentWeapon.maxAmmo;
 
-        player.controls.Character.Fire.performed += context => Shoot();
+        player = GetComponent<Player>();
+        AssignInputEvents();
+    }
+
+    private void AssignInputEvents()
+    {
+        PlayerControls controls = player.controls;
+
+        controls.Character.Fire.performed += context => Shoot();
+
+        controls.Character.EquipSlot1.performed += context => EquipWeapon(0);
+        controls.Character.EquipSlot2.performed += context => EquipWeapon(1);
+
+        controls.Character.DropCurrentWeapon.performed += context => DropCurrentWeapon();
+    }
+
+    private void EquipWeapon(int index)
+    {
+        currentWeapon = weaponSlots[index];
+    }
+
+    private void DropCurrentWeapon()
+    {
+        if (weaponSlots.Count <= 1)
+            return;
+
+        weaponSlots.Remove(currentWeapon);
+
+        currentWeapon = weaponSlots[0];
     }
 
     private void Shoot()
     {
+        if (currentWeapon.ammo <= 0)
+            return;
+
+        currentWeapon.ammo--;
+
         GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
 
         Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
