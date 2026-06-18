@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerWeaponController : MonoBehaviour
 {
+    private const float REFERENCE_BULLET_SPEED = 20f; // Đây là tốc độ mặc định mà từ đó công thích tính mass được tạo ra
+
     private Player player;
 
     [SerializeField] private GameObject bulletPrefab;
@@ -21,10 +23,13 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Shoot()
     {
-        GameObject bullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
-        bullet.GetComponent<Rigidbody>().linearVelocity = BulletDirection() * bulletSpeed;
+        GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
 
-        Destroy(bullet, 10f);
+        Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
+        rbNewBullet.mass = REFERENCE_BULLET_SPEED / bulletSpeed; // Tính mass dựa trên tốc độ mong muốn để đảm bảo lực bắn phù hợp
+        rbNewBullet.linearVelocity = BulletDirection() * bulletSpeed;
+
+        Destroy(newBullet, 10f);
 
         GetComponentInChildren<Animator>().SetTrigger("Fire");
     }
@@ -43,6 +48,7 @@ public class PlayerWeaponController : MonoBehaviour
         //gunPoint.LookAt(aim);
 
         return direction;
+
     }
 
     public Transform GunPoint() => gunPoint;
