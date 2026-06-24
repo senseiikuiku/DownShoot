@@ -16,35 +16,36 @@ public class PlayerWeaponController : MonoBehaviour
     [SerializeField] private Transform weaponHolder;
 
     [Header("Inventory")]
+    [SerializeField] private int maxSlots = 2;
     [SerializeField] private List<Weapon> weaponSlots;
-
 
     private void Start()
     {
-        currentWeapon.ammo = currentWeapon.maxAmmo;
+        currentWeapon.bulletsInMagazine = currentWeapon.magazineCapacity;
 
         player = GetComponent<Player>();
         AssignInputEvents();
     }
 
-    private void AssignInputEvents()
-    {
-        PlayerControls controls = player.controls;
 
-        controls.Character.Fire.performed += context => Shoot();
-
-        controls.Character.EquipSlot1.performed += context => EquipWeapon(0);
-        controls.Character.EquipSlot2.performed += context => EquipWeapon(1);
-
-        controls.Character.DropCurrentWeapon.performed += context => DropCurrentWeapon();
-    }
-
+    #region Slots management - Pickup\Drop\Equip
     private void EquipWeapon(int index)
     {
         currentWeapon = weaponSlots[index];
     }
 
-    private void DropCurrentWeapon()
+    public void PickupWeapon(Weapon weapon)
+    {
+        if (weaponSlots.Count >= maxSlots)
+        {
+            Debug.Log("Not slots available");
+            return;
+        }
+
+        weaponSlots.Add(weapon);
+    }
+
+    private void DropWeapon()
     {
         if (weaponSlots.Count <= 1)
             return;
@@ -53,13 +54,12 @@ public class PlayerWeaponController : MonoBehaviour
 
         currentWeapon = weaponSlots[0];
     }
+    #endregion
 
     private void Shoot()
     {
-        if (currentWeapon.ammo <= 0)
+        if (!currentWeapon.CanShoot())
             return;
-
-        currentWeapon.ammo--;
 
         GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
 
@@ -89,5 +89,29 @@ public class PlayerWeaponController : MonoBehaviour
 
     }
 
+    public Weapon CurrentWeapon() => currentWeapon;
+
     public Transform GunPoint() => gunPoint;
+
+    #region Input Events
+    private void AssignInputEvents()
+    {
+        PlayerControls controls = player.controls;
+
+        controls.Character.Fire.performed += context => Shoot();
+
+        controls.Character.EquipSlot1.performed += context => EquipWeapon(0);
+        controls.Character.EquipSlot2.performed += context => EquipWeapon(1);
+
+        controls.Character.DropCurrentWeapon.performed += context => DropWeapon();
+
+        controls.Character.Reload.performed += context =>
+        {
+            if (currentWeapon.CanReload())
+            {
+                player.weaponVisuals.PlayReloadAnimation();
+            }
+        };
+    }
+    #endregion
 }

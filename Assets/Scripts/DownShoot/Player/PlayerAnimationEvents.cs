@@ -3,17 +3,17 @@
 public class PlayerAnimationEvents : MonoBehaviour
 {
     private PlayerWeaponVisuals visualController;
-
+    private PlayerWeaponController weaponController;
     private void Start()
     {
         visualController = GetComponentInParent<PlayerWeaponVisuals>();
+        weaponController = GetComponentInParent<PlayerWeaponController>();
     }
 
     public void ReloadIsOver()
     {
         visualController.MaximizeRigWeight();
-
-        // Nộp đạn
+        weaponController.CurrentWeapon().RefillBullets();
     }
 
     public void WeaponGrabIsOver()

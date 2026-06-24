@@ -3,21 +3,11 @@ using UnityEngine.Animations.Rigging;
 
 public class PlayerWeaponVisuals : MonoBehaviour
 {
+    private Player player;
     private Animator animator;
     private bool isGrabbingWeapon;
 
-    #region Gun Transform region
-    [SerializeField] private Transform[] gunTransforms;
-
-    [SerializeField] private Transform pistol;
-    [SerializeField] private Transform revolver;
-    [SerializeField] private Transform autoRifle;
-    [SerializeField] private Transform shotgun;
-    [SerializeField] private Transform rifle;
-
-    private Transform currentGun;
-
-    #endregion
+    [SerializeField] private WeaponModel[] weaponModels;
 
     [Header("Rig")]
     [SerializeField] private float rigWeightIncreaseRate;
@@ -32,12 +22,15 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
 
 
+
     private void Start()
     {
+        player = GetComponent<Player>();
         animator = GetComponentInChildren<Animator>();
         rig = GetComponentInChildren<Rig>();
+        weaponModels = GetComponentsInChildren<WeaponModel>(true);
 
-        SwichOn(pistol);
+        SwichOn();
         SwitchAnimationLayer(1);
     }
 
@@ -45,15 +38,34 @@ public class PlayerWeaponVisuals : MonoBehaviour
     {
         CheckWeaponSwitch();
 
-        if (Input.GetKeyDown(KeyCode.R) && isGrabbingWeapon == false)
-        {
-            animator.SetTrigger("Reload");
-
-            ReduceRigWeight();
-        }
         UpdateRigWeight();
 
         UpdateLeftHandIkWeight();
+    }
+
+    public WeaponModel CurrentWeaponModel()
+    {
+        WeaponModel currentWeapon = null;
+
+        WeaponType weaponType = player.weapon.CurrentWeapon().weaponType;
+
+        for (int i = 0; i < weaponModels.Length; i++)
+        {
+            if (weaponModels[i].weaponType == weaponType)
+            {
+                currentWeapon = weaponModels[i];
+            }
+        }
+        return currentWeapon;
+    }
+
+    public void PlayReloadAnimation()
+    {
+        if (isGrabbingWeapon)
+            return;
+
+        animator.SetTrigger("Reload");
+        ReduceRigWeight();
     }
 
     private void UpdateLeftHandIkWeight()
@@ -91,7 +103,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
     {
         leftHandIK.weight = 0;
         ReduceRigWeight();
-        animator.SetFloat("WeaponGrabType", ((float)grabType));
+        animator.SetFloat("WeaponGrabType", ((float)CurrentWeaponModel().grabType));
         animator.SetTrigger("WeaponGrab");
 
         SetBusyGrabbingWeaponTo(true);
@@ -107,26 +119,26 @@ public class PlayerWeaponVisuals : MonoBehaviour
     public void MaximizeRigWeight() => shouldIncrease_RigWeight = true;
     public void MaximizeLeftHandIkWeight() => shouldIncrease_LeftHandIKWeight = true;
 
-    private void SwichOn(Transform gun)
+    private void SwichOn()
     {
-        SwitchOffGuns();
-        gun.gameObject.SetActive(true);
-        currentGun = gun;
+        SwitchOffWeaponModels();
+
+        CurrentWeaponModel().gameObject.SetActive(true);
 
         AttachLeftHand();
     }
 
-    private void SwitchOffGuns()
+    private void SwitchOffWeaponModels()
     {
-        for (int i = 0; i < gunTransforms.Length; i++)
+        for (int i = 0; i < weaponModels.Length; i++)
         {
-            gunTransforms[i].gameObject.SetActive(false);
+            weaponModels[i].gameObject.SetActive(false);
         }
     }
 
     private void AttachLeftHand()
     {
-        Transform targetTransform = currentGun.GetComponentInChildren<LeftHandTargetTransform>().transform;
+        Transform targetTransform = CurrentWeaponModel().holdPoint;
 
         leftHand_IK_Target.localPosition = targetTransform.localPosition;
         leftHand_IK_Target.localRotation = targetTransform.localRotation;
@@ -147,35 +159,33 @@ public class PlayerWeaponVisuals : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SwichOn(pistol);
+            SwichOn();
             SwitchAnimationLayer(1);
             PlayWeaponGrabAnimation(GrabType.SideGrab);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SwichOn(revolver);
+            SwichOn();
             SwitchAnimationLayer(1);
-            PlayWeaponGrabAnimation(GrabType.BackGrab);
+            PlayWeaponGrabAnimation(GrabType.SideGrab);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SwichOn(autoRifle);
+            SwichOn();
             SwitchAnimationLayer(1);
             PlayWeaponGrabAnimation(GrabType.BackGrab);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            SwichOn(shotgun);
+            SwichOn();
             SwitchAnimationLayer(2);
             PlayWeaponGrabAnimation(GrabType.BackGrab);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            SwichOn(rifle);
+            SwichOn();
             SwitchAnimationLayer(3);
             PlayWeaponGrabAnimation(GrabType.BackGrab);
         }
     }
 }
-
-public enum GrabType { SideGrab, BackGrab }

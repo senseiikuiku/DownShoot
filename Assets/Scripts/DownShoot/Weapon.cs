@@ -12,6 +12,56 @@
 public class Weapon
 {
     public WeaponType weaponType;
-    public float ammo;
-    public float maxAmmo;
+
+    public int bulletsInMagazine; // Số lượng đạn hiện có trong băng đạn
+    public int magazineCapacity; // Sức chứa tối đa của băng đạn
+    public int totalReserveAmmo; // Tổng số đạn dự trữ mà người chơi có thể mang theo
+
+    public bool CanShoot()
+    {
+        return HaveEnoughBullets();
+    }
+
+    private bool HaveEnoughBullets()
+    {
+        if (bulletsInMagazine > 0)
+        {
+            bulletsInMagazine--;
+            return true;
+        }
+        return false;
+    }
+
+    public bool CanReload()
+    {
+        if (bulletsInMagazine == magazineCapacity)
+        {
+            return false;
+        }
+
+        if (totalReserveAmmo > 0)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public void RefillBullets()
+    {
+        int bulletsToReload = magazineCapacity;
+
+        // Nếu số đạn cần nạp vượt quá số đạn dự trữ, chỉ nạp số đạn dự trữ còn lại
+        if (bulletsToReload > totalReserveAmmo)
+        {
+            bulletsToReload = totalReserveAmmo;
+        }
+
+        totalReserveAmmo -= bulletsToReload;
+        bulletsInMagazine = bulletsToReload;
+
+        if (totalReserveAmmo < 0)
+        {
+            totalReserveAmmo = 0;
+        }
+    }
 }
