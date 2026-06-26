@@ -26,4 +26,6 @@ public class PlayerAnimationEvents : MonoBehaviour
         visualController.MaximizeRigWeight();
         visualController.MaximizeLeftHandIkWeight();
     }
+
+    public void SwitchOnWeaponModel() => visualController.SwitchOnCurrentWeaponModel();
 }

@@ -21,17 +21,22 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Start()
     {
-        currentWeapon.bulletsInMagazine = currentWeapon.magazineCapacity;
-
         player = GetComponent<Player>();
         AssignInputEvents();
+
+        Invoke("EquipStartingWeapon", 1f);
     }
 
 
     #region Slots management - Pickup\Drop\Equip
+
+    private void EquipStartingWeapon() => EquipWeapon(0);
+
     private void EquipWeapon(int index)
     {
         currentWeapon = weaponSlots[index];
+
+        player.weaponVisuals.PlayWeaponEquipAnimation();
     }
 
     public void PickupWeapon(Weapon weapon)
@@ -43,16 +48,18 @@ public class PlayerWeaponController : MonoBehaviour
         }
 
         weaponSlots.Add(weapon);
+
+        player.weaponVisuals.SwitchOnBackupWeaponModel();
     }
 
     private void DropWeapon()
     {
-        if (weaponSlots.Count <= 1)
+        if (HasOnlyOneWeapon())
             return;
 
         weaponSlots.Remove(currentWeapon);
 
-        currentWeapon = weaponSlots[0];
+        EquipWeapon(0);
     }
     #endregion
 
@@ -89,7 +96,21 @@ public class PlayerWeaponController : MonoBehaviour
 
     }
 
+    public bool HasOnlyOneWeapon() => weaponSlots.Count <= 1;
+
     public Weapon CurrentWeapon() => currentWeapon;
+
+    public Weapon BackupWeapon()
+    {
+        foreach (Weapon weapon in weaponSlots)
+        {
+            if (weapon != currentWeapon)
+            {
+                return weapon;
+            }
+        }
+        return null;
+    }
 
     public Transform GunPoint() => gunPoint;
 

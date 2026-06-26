@@ -1,4 +1,6 @@
-﻿public enum WeaponType
+﻿using System.Collections;
+using UnityEngine;
+public enum WeaponType
 {
     Pistol,
     Revolver,
@@ -16,6 +18,11 @@ public class Weapon
     public int bulletsInMagazine; // Số lượng đạn hiện có trong băng đạn
     public int magazineCapacity; // Sức chứa tối đa của băng đạn
     public int totalReserveAmmo; // Tổng số đạn dự trữ mà người chơi có thể mang theo
+
+    [Range(1, 3)]
+    public float reloadSpeed = 1f;
+    [Range(1, 3)]
+    public float equipmentSpeed = 1f;
 
     public bool CanShoot()
     {
