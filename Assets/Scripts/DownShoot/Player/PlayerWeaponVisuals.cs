@@ -62,10 +62,10 @@ public class PlayerWeaponVisuals : MonoBehaviour
         animator.SetFloat("EquipType", ((float)equipType));
         animator.SetTrigger("EquipWeapon");
         animator.SetFloat("EquipSpeed", equipmentSpeed);
-        SetBusyGrabbingWeaponTo(true);
+        SetBusyEquipingWeaponTo(true);
     }
 
-    public void SetBusyGrabbingWeaponTo(bool busy)
+    public void SetBusyEquipingWeaponTo(bool busy)
     {
         isEquipingWeapon = busy;
         animator.SetBool("BusyEquipingWeapon", isEquipingWeapon);

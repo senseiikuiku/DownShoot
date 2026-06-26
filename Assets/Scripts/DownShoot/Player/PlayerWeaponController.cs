@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 public class PlayerWeaponController : MonoBehaviour
 {
@@ -68,15 +69,23 @@ public class PlayerWeaponController : MonoBehaviour
         if (!currentWeapon.CanShoot())
             return;
 
-        GameObject newBullet = Instantiate(bulletPrefab, gunPoint.position, Quaternion.LookRotation(gunPoint.forward));
+        GameObject newBullet = ObjectPool.instance.GetBullet();
+
+        newBullet.transform.position = gunPoint.position;
+        newBullet.transform.rotation = Quaternion.LookRotation(gunPoint.forward);
 
         Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
         rbNewBullet.mass = REFERENCE_BULLET_SPEED / bulletSpeed; // Tính mass dựa trên tốc độ mong muốn để đảm bảo lực bắn phù hợp
         rbNewBullet.linearVelocity = BulletDirection() * bulletSpeed;
 
-        Destroy(newBullet, 10f);
-
+        StartCoroutine(ReturnBulletAfterDelay(newBullet, 10f));
         GetComponentInChildren<Animator>().SetTrigger("Fire");
+    }
+
+    private IEnumerator ReturnBulletAfterDelay(GameObject bullet, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ObjectPool.instance.ReturnBullet(bullet);
     }
 
     public Vector3 BulletDirection()
