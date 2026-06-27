@@ -20,9 +20,9 @@ public class Weapon
     public int totalReserveAmmo; // Tổng số đạn dự trữ mà người chơi có thể mang theo
 
     [Range(1, 3)]
-    public float reloadSpeed = 1f;
+    public float reloadSpeed = 1f; // Tốc độ nạp đạn
     [Range(1, 3)]
-    public float equipmentSpeed = 1f;
+    public float equipmentSpeed = 1f; // Tốc độ trang bị vũ khí
 
     [Space]
     public float fireRate = 1f; // Tốc độ bắn
@@ -83,7 +83,7 @@ public class Weapon
             totalReserveAmmo = 0;
         }
     }
-    private bool HaveEnoughBullets() => totalReserveAmmo > 0;
+    private bool HaveEnoughBullets() => bulletsInMagazine > 0;
 
     #endregion
 }
