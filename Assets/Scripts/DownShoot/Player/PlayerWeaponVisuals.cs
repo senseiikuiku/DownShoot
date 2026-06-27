@@ -29,7 +29,7 @@ public class PlayerWeaponVisuals : MonoBehaviour
         weaponModels = GetComponentsInChildren<WeaponModel>(true);
         backupWeaponModels = GetComponentsInChildren<BackupWeaponModel>(true);
 
-        SwitchOnCurrentWeaponModel();
+        // SwitchOnCurrentWeaponModel();
     }
 
     private void Update()
@@ -38,7 +38,6 @@ public class PlayerWeaponVisuals : MonoBehaviour
 
         UpdateLeftHandIkWeight();
     }
-
 
     public void PlayReloadAnimation()
     {

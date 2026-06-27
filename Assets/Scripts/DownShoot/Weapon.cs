@@ -24,35 +24,47 @@ public class Weapon
     [Range(1, 3)]
     public float equipmentSpeed = 1f;
 
+    [Space]
+    public float fireRate = 1f; // Tốc độ bắn
+    private float lastShootTime; // Thời gian bắn lần cuối
+
     public bool CanShoot()
     {
-        return HaveEnoughBullets();
-    }
-
-    private bool HaveEnoughBullets()
-    {
-        if (bulletsInMagazine > 0)
+        if (HaveEnoughBullets() && ReadyToShoot())
         {
             bulletsInMagazine--;
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool ReadyToShoot()
+    {
+        if (Time.time > lastShootTime + 1f / fireRate)
+        {
+            lastShootTime = Time.time;
             return true;
         }
         return false;
     }
 
+    #region Reload Methods 
+
     public bool CanReload()
     {
+        // Kiểm tra xem băng đạn đã đầy chưa
         if (bulletsInMagazine == magazineCapacity)
         {
             return false;
         }
-
+        // Kiểm tra xem còn đạn dự trữ hay không
         if (totalReserveAmmo > 0)
         {
             return true;
         }
         return false;
     }
-
     public void RefillBullets()
     {
         int bulletsToReload = magazineCapacity;
@@ -71,4 +83,7 @@ public class Weapon
             totalReserveAmmo = 0;
         }
     }
+    private bool HaveEnoughBullets() => totalReserveAmmo > 0;
+
+    #endregion
 }
