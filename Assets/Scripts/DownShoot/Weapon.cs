@@ -24,8 +24,18 @@ public class Weapon
 
     [Header("Shooting Specifics")]
     public ShootType shootType; // Loại bắn của vũ khí
+    public int bulletsPerShot;
+    public float defaultFireRate;
     public float fireRate = 1f; // Tốc độ bắn
     private float lastShootTime; // Thời gian bắn lần cuối
+
+    [Header("Burst Fire")]
+    public bool burstAvailable;
+    public bool burstActive;
+
+    public int burstBulletsPerShot;
+    public float burstFireRate;
+    public float burstFireDelay = .1f;
 
     [Header("Magazine Details")]
     public int bulletsInMagazine; // Số lượng đạn hiện có trong băng đạn
@@ -75,16 +85,40 @@ public class Weapon
 
     #endregion
 
-    public bool CanShoot()
+    #region Burst Methods
+
+    public bool BurstActivated()
     {
-        if (HaveEnoughBullets() && ReadyToShoot())
+        if (weaponType == WeaponType.Shotgun)
         {
-            bulletsInMagazine--;
+            burstFireDelay = 0;
             return true;
         }
-
-        return false;
+        return burstActive;
     }
+
+    public void ToggleBurst()
+    {
+        if (burstAvailable == false)
+            return;
+
+        burstActive = !burstActive;
+
+        if (burstActive)
+        {
+            bulletsPerShot = burstBulletsPerShot;
+            fireRate = burstFireRate;
+        }
+        else
+        {
+            bulletsPerShot = 1;
+            fireRate = defaultFireRate;
+        }
+    }
+
+    #endregion
+
+    public bool CanShoot() => HaveEnoughBullets() && ReadyToShoot();
 
     private bool ReadyToShoot()
     {

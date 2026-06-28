@@ -630,7 +630,14 @@ MonoBehaviour:
   currentWeapon:
     weaponType: 1
     shootType: 0
+    bulletsPerShot: 0
+    defaultFireRate: 0
     fireRate: 1
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 0
     magazineCapacity: 30
     totalReserveAmmo: 100
@@ -645,28 +652,42 @@ MonoBehaviour:
   weaponHolder: {fileID: 232854865}
   maxSlots: 2
   weaponSlots:
-  - weaponType: 0
-    shootType: 0
-    fireRate: 5
+  - weaponType: 2
+    shootType: 1
+    bulletsPerShot: 0
+    defaultFireRate: 10
+    fireRate: 10
+    burstAvailable: 1
+    burstActive: 0
+    burstBulletsPerShot: 3
+    burstFireRate: 5
+    burstFireDelay: 0.1
     bulletsInMagazine: 9000
     magazineCapacity: 50
     totalReserveAmmo: 100
     reloadSpeed: 1
     equipmentSpeed: 1
-    baseSpread: 1
-    maximumSpread: 0.5
+    baseSpread: 5
+    maximumSpread: 10
     currentSpread: 2
     spreadIncreaseRate: 0.15
-  - weaponType: 2
-    shootType: 1
-    fireRate: 10
+  - weaponType: 3
+    shootType: 0
+    bulletsPerShot: 5
+    defaultFireRate: 1
+    fireRate: 1
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 9000
     magazineCapacity: 40
     totalReserveAmmo: 100
     reloadSpeed: 1
     equipmentSpeed: 1
-    baseSpread: 1
-    maximumSpread: 10
+    baseSpread: 10
+    maximumSpread: 15
     currentSpread: 2
     spreadIncreaseRate: 0.15
 --- !u!114 &150614682
@@ -1784,7 +1805,14 @@ MonoBehaviour:
   weapon:
     weaponType: 2
     shootType: 0
+    bulletsPerShot: 0
+    defaultFireRate: 0
     fireRate: 1
+    burstAvailable: 0
+    burstActive: 0
+    burstBulletsPerShot: 0
+    burstFireRate: 0
+    burstFireDelay: 0.1
     bulletsInMagazine: 0
     magazineCapacity: 0
     totalReserveAmmo: 0
