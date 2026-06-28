@@ -37,7 +37,43 @@ public class Weapon
     [Range(1, 3)]
     public float equipmentSpeed = 1f; // Tốc độ trang bị vũ khí
 
+    [Header("Spread")]
+    public float baseSpread = 1; // Độ giãn cơ bản của đạn
+    public float maximumSpread = 3; // Độ giãn tối đa của đạn
+    public float currentSpread = 2; // Độ giãn hiện tại của đạn
 
+    public float spreadIncreaseRate = .15f; // Tốc độ tăng độ giãn khi bắn liên tục
+
+    private float lastSpreadUpdateTime; // Thời gian cập nhật độ giãn lần cuối
+    private float spreadCooldown = 1f; // Thời gian hồi phục độ giãn
+
+    #region Spread Methods
+    public Vector3 ApplySpread(Vector3 originalDirection)
+    {
+        UpdateSpread();
+
+        float randomizedValye = Random.Range(-currentSpread, currentSpread);
+        Quaternion spreadRotation = Quaternion.Euler(randomizedValye, randomizedValye, randomizedValye);
+        return spreadRotation * originalDirection;
+    }
+
+    private void UpdateSpread()
+    {
+        if (Time.time > lastSpreadUpdateTime + spreadCooldown)
+            currentSpread = baseSpread;
+        else
+            IncreaseSpread();
+
+        lastSpreadUpdateTime = Time.time;
+    }
+
+    private void IncreaseSpread()
+    {
+        currentSpread =
+            Mathf.Clamp(currentSpread + spreadIncreaseRate, baseSpread, maximumSpread);
+    }
+
+    #endregion
 
     public bool CanShoot()
     {

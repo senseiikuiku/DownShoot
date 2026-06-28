@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ApplyRotation()
     {
-        Vector3 lookingDirection = player.aim.GetMouseHitInfo().point - transform.position;
+        Vector3 lookingDirection = player.aim.GetMouseHitInfo().point - transform.position; // Lấy hướng từ vị trí người chơi đến điểm mà chuột đang trỏ
         lookingDirection.y = 0;
         lookingDirection.Normalize();
 

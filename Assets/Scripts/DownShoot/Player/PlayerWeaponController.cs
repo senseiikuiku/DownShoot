@@ -95,8 +95,10 @@ public class PlayerWeaponController : MonoBehaviour
 
         Rigidbody rbNewBullet = newBullet.GetComponent<Rigidbody>();
 
+        Vector3 bulletsDirection = currentWeapon.ApplySpread(BulletDirection());
+
         rbNewBullet.mass = REFERENCE_BULLET_SPEED / bulletSpeed; // Tính mass dựa trên tốc độ mong muốn để đảm bảo lực bắn phù hợp
-        rbNewBullet.linearVelocity = BulletDirection() * bulletSpeed;
+        rbNewBullet.linearVelocity = bulletsDirection * bulletSpeed;
 
         StartCoroutine(ReturnBulletAfterDelay(newBullet, 10f));
 
