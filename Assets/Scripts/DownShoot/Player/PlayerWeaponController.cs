@@ -10,6 +10,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     [SerializeField] private Weapon currentWeapon;
     private bool weaponReady;
+    private bool isShooting;
 
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed;
@@ -28,6 +29,13 @@ public class PlayerWeaponController : MonoBehaviour
         Invoke("EquipStartingWeapon", 1f);
     }
 
+    private void Update()
+    {
+        if (isShooting)
+        {
+            Shoot();
+        }
+    }
 
     #region Slots management - Pickup\Drop\Equip\Ready Weapon
 
@@ -76,6 +84,9 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (!currentWeapon.CanShoot())
             return;
+
+        if (currentWeapon.shootType == ShootType.Single)
+            isShooting = false;
 
         GameObject newBullet = ObjectPool.instance.GetBullet();
 
@@ -141,7 +152,8 @@ public class PlayerWeaponController : MonoBehaviour
     {
         PlayerControls controls = player.controls;
 
-        controls.Character.Fire.performed += context => Shoot();
+        controls.Character.Fire.performed += context => isShooting = true;
+        controls.Character.Fire.canceled += context => isShooting = false;
 
         controls.Character.EquipSlot1.performed += context => EquipWeapon(0);
         controls.Character.EquipSlot2.performed += context => EquipWeapon(1);

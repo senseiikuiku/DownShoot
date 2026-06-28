@@ -629,31 +629,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerWeaponController
   currentWeapon:
     weaponType: 1
+    shootType: 0
+    fireRate: 1
     bulletsInMagazine: 0
     magazineCapacity: 30
     totalReserveAmmo: 100
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 1
   bulletPrefab: {fileID: 9050728772132467655, guid: 092f187f30212464eaa3f79ddde068ac, type: 3}
   bulletSpeed: 10
   weaponHolder: {fileID: 232854865}
   maxSlots: 2
   weaponSlots:
   - weaponType: 0
+    shootType: 0
+    fireRate: 5
     bulletsInMagazine: 0
     magazineCapacity: 50
     totalReserveAmmo: 100
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 5
   - weaponType: 4
+    shootType: 0
+    fireRate: 1
     bulletsInMagazine: 0
     magazineCapacity: 40
     totalReserveAmmo: 100
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 1
 --- !u!114 &150614682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1768,12 +1771,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ItemPickup
   weapon:
     weaponType: 2
+    shootType: 0
+    fireRate: 1
     bulletsInMagazine: 0
     magazineCapacity: 0
     totalReserveAmmo: 0
     reloadSpeed: 1
     equipmentSpeed: 1
-    fireRate: 1
 --- !u!4 &427219664
 Transform:
   m_ObjectHideFlags: 0
@@ -6615,12 +6619,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'mixamorig:Head'\n\tTransform 'mixamorig:LeftArm'\n\tTransform
-    'mixamorig:RightHand'\n\tTransform 'mixamorig:LeftForeArm'\n\tTransform 'mixamorig:RightForeArm'\n\tTransform
-    'mixamorig:Neck'\n\tTransform 'mixamorig:LeftHand'\n\tTransform 'mixamorig:Head'\n\tTransform
-    'mixamorig:LeftArm'\n\tTransform 'mixamorig:RightHand'\n\tand more ..."
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0

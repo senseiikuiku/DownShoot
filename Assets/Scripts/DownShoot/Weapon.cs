@@ -9,12 +9,25 @@ public enum WeaponType
     Rifle
 }
 
+public enum ShootType
+{
+    Single,
+    Auto,
+    Burst
+}
+
 
 [System.Serializable] // Giúp cho lớp Weapon có thể được hiển thị trong Inspector của Unity
 public class Weapon
 {
     public WeaponType weaponType;
 
+    [Header("Shooting Specifics")]
+    public ShootType shootType; // Loại bắn của vũ khí
+    public float fireRate = 1f; // Tốc độ bắn
+    private float lastShootTime; // Thời gian bắn lần cuối
+
+    [Header("Magazine Details")]
     public int bulletsInMagazine; // Số lượng đạn hiện có trong băng đạn
     public int magazineCapacity; // Sức chứa tối đa của băng đạn
     public int totalReserveAmmo; // Tổng số đạn dự trữ mà người chơi có thể mang theo
@@ -24,9 +37,7 @@ public class Weapon
     [Range(1, 3)]
     public float equipmentSpeed = 1f; // Tốc độ trang bị vũ khí
 
-    [Space]
-    public float fireRate = 1f; // Tốc độ bắn
-    private float lastShootTime; // Thời gian bắn lần cuối
+
 
     public bool CanShoot()
     {
